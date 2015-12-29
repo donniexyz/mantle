@@ -39,9 +39,21 @@ Non Backward Compatible Changes
 
 New Features:
 
-- Added components.xml file to specify which mantle components to load and
-  component.xml files in each component to specify consistent name
-  (regardless of directory name) and component dependencies
+- Mantle REST API
+  - Uses new Service REST API feature in Moqui Framework
+  - See entity op and service mappings in the mantle.rest.xml file
+  - Has REST services for parties, facilities, products, assets, work
+    efforts, orders, shipments, returns, invoices, payments, financial
+    accounts, general ledger
+  - Has 297 resources with 349 methods (services), 499 definitions
+  - Use Moqui feature to generate Swagger file and view in Swagger UI
+    - see https://github.com/swagger-api/swagger-ui
+    - use a URL like http://localhost:8080/rest/service.swagger/mantle
+- Added Return Functionality
+  - Create general returns or from order
+  - Process return responses: credit, refund, replace, manual
+  - Immediate response or after item receipt
+  - Spock tests for return process and various responses
 - The AuthorizeDotNet project is now a component within Mantle
 - Added EDI integrations (through Moqui SystemMessage) in the mantle-edi
   component for:
@@ -93,8 +105,9 @@ New Features:
   - Added Cash Flow Statement, Retained Equity Statement, and Financial
     Ratios (Liquidity, Activity, Leverage, and Profitability) reports
 - Import time summary and detail files (from external systems like Kronos)
-- New Return Functionality
-  - Services to create returns and add items from orders
+- Added components.xml file to specify which mantle components to load and
+  component.xml files in each component to specify consistent name
+  (regardless of directory name) and component dependencies
 
 Bug Fixes:
 
@@ -459,3 +472,9 @@ Long Term To Do List
   - https://developers.braintreepayments.com/start/hello-server/java
   - https://developers.braintreepayments.com/start/hello-client/javascript/v2
   - payment/Braintree component
+- Shopping Cart Integrations
+  - API2Cart
+    - https://www.api2cart.com
+    - https://www.api2cart.com/supported-platforms/
+    - http://docs.api2cart.com
+- For GL API something like http://subledger.com https://api.subledger.com/v2/index.html

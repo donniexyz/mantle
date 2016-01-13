@@ -13,42 +13,25 @@ along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
 <entity-facade-xml type="seed">
+    <!-- User Group Preference for mantle content root, used in various services -->
     <moqui.security.UserGroupPreference userGroupId="ALL_USERS" preferenceKey="mantle.content.root"
             preferenceValue="dbresource://mantle/content"/>
 
-    <moqui.screen.SubscreensItem screenLocation="component://webroot/screen/webroot/apps.xml"
-            subscreenName="my" subscreenLocation="component://mantle-usl/screen/MyAccount.xml"
-            menuTitle="My Account" menuIndex="90" menuInclude="Y"/>
+    <!-- Artifact group for all of the Mantle REST API via the mantle resource (the root resource) -->
+    <moqui.security.ArtifactGroup artifactGroupId="MANTLE_API" description="Moqui Tools REST API (via root resource)"/>
+    <moqui.security.ArtifactGroupMember artifactGroupId="MANTLE_API" artifactTypeEnumId="AT_REST_PATH"
+            inheritAuthz="Y" artifactName="/mantle"/>
+    <moqui.security.ArtifactAuthz artifactAuthzId="MANTLEAPI_AUTHZ_1" userGroupId="ADMIN" artifactGroupId="MANTLE_API"
+            authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
 
-    <moqui.security.ArtifactGroup artifactGroupId="MY_ACCOUNT" description="My Account App (via root screen)"/>
-    <moqui.security.ArtifactGroupMember artifactGroupId="MY_ACCOUNT" artifactName="component://mantle-usl/screen/MyAccount.xml"
-            artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
-    <moqui.security.ArtifactAuthz artifactAuthzId="MY_ACCOUNT_ALL" userGroupId="ALL_USERS" artifactGroupId="MY_ACCOUNT"
-            authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
-
-    <moqui.screen.ScreenThemeResource screenThemeId="DEFAULT" sequenceNum="120" resourceTypeEnumId="STRT_HEADER_NAVBAR_ITEM">
-        <resourceValue><![CDATA[
-<#if ec.user.userId?has_content>
-<div class="btn-group navbar-right">
-    <#assign messageCount = ec.entity.find("mantle.party.communication.CommunicationEventAndPurpose").condition("toPartyId", ec.user.userAccount.partyId!).condition("statusId", "CeReceived").condition("communicationEventTypeId", "in", "Email,Message,Comment").disableAuthz().count()>
-    <#assign eventCount = ec.entity.find("mantle.work.effort.WorkEffortAndParty").condition("partyId", ec.user.userAccount.partyId!).condition("estimatedStartDate", "greater-equals", ec.user.getPeriodRange("week", "")[0]).condition("estimatedStartDate", "less-equals", ec.user.getPeriodRange("week", "")[1]).condition("workEffortTypeEnumId", "WetEvent").disableAuthz().count()>
-    <#assign taskCount = ec.entity.find("mantle.work.effort.WorkEffortAndParty").condition("partyId", ec.user.userAccount.partyId!).condition("statusId", "not-in", "WeClosed,WeCancelled").condition("workEffortTypeEnumId", "WetTask").disableAuthz().count()>
-    <a href="/apps/my/User/Messages/FindMessage?statusId=CeReceived&toPartyId=${ec.user.userAccount.partyId!}" data-toggle="tooltip" data-container="body" data-original-title="Messages" data-placement="bottom" class="btn btn-default btn-sm navbar-btn">
-        <i class="glyphicon glyphicon-envelope"></i>
-        <span class="label label-warning">${messageCount!"0"}</span>
-    </a>
-    <a href="/apps/my/User/Calendar/MyCalendar" data-toggle="tooltip" data-container="body" data-original-title="Events This Week" data-placement="bottom" class="btn btn-default btn-sm navbar-btn">
-        <i class="glyphicon glyphicon-calendar"></i>
-        <span class="label label-primary">${eventCount!"0"}</span>
-    </a>
-    <a href="/apps/my/User/Task/MyTasks" data-toggle="tooltip" data-container="body" data-original-title="Open Tasks" data-placement="bottom" class="btn btn-default btn-sm navbar-btn">
-        <i class="glyphicon glyphicon-check"></i>
-        <span class="label label-success">${taskCount!"0"}</span>
-    </a>
-</div>
-</#if>
-        ]]></resourceValue>
-    </moqui.screen.ScreenThemeResource>
+    <!-- Configuration for Internal Financial Account Payment Processing -->
+    <moqui.basic.Enumeration description="Financial Account" enumId="PgtFinancialAccount" enumTypeId="PaymentGatewayType"/>
+    <mantle.account.method.PaymentGatewayConfig paymentGatewayConfigId="FinancialAccountLocal"
+            paymentGatewayTypeEnumId="PgtFinancialAccount" description="Financial Account Local"
+            authorizeServiceName="mantle.account.FinancialAccountServices.authorize#FinancialAccountPayment"
+            captureServiceName="mantle.account.FinancialAccountServices.capture#FinancialAccountPayment"
+            releaseServiceName="mantle.account.FinancialAccountServices.release#FinancialAccountPayment"
+            refundServiceName="mantle.account.FinancialAccountServices.refund#FinancialAccountPayment"/>
 
     <!-- Message templates for formatting common sets of entity fields (generally for a view-entity) -->
     <!-- NOTE: Other common message templates in CommonL10nData -->

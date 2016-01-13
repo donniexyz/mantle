@@ -17,6 +17,8 @@ along with this software (see the LICENSE.md file). If not, see
 
     <!-- ========================================================= -->
     <!--  - mantle.work.effort -->
+    <!--  - mantle.work.estimate -->
+    <!--  - mantle.work.measurement -->
     <!--  - mantle.work.time -->
     <!-- ========================================================= -->
 
@@ -442,8 +444,8 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="receiveNotifications" type="text-indicator"/>
         <relationship type="one" related-entity-name="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
         <relationship type="one" related-entity-name="mantle.party.Party" short-alias="party"/>
-        <relationship type="one-nofk" related-entity-name="mantle.party.Person"/>
-        <relationship type="one-nofk" related-entity-name="mantle.party.Organization"/>
+        <relationship type="one-nofk" related-entity-name="mantle.party.Person" short-alias="person"/>
+        <relationship type="one-nofk" related-entity-name="mantle.party.Organization" short-alias="organization"/>
         <relationship type="one" related-entity-name="mantle.party.RoleType" short-alias="role"/>
         <relationship type="one" title="WorkEffortParty" related-entity-name="moqui.basic.StatusItem" short-alias="status"/>
         <relationship type="one" title="WorkEffortPartyAvailability" related-entity-name="moqui.basic.Enumeration" short-alias="availability">
@@ -567,7 +569,6 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.StatusItem description="Cancelled" sequenceNum="3" statusId="WepdCancelled" statusTypeId="WorkEffortProduct"/>
         </seed-data>
     </entity>
-
     <entity entity-name="WorkEffortSkillStandard" package-name="mantle.work.effort">
         <field name="workEffortId" type="id" is-pk="true"/>
         <field name="skillTypeEnumId" type="id" is-pk="true"/>
@@ -577,6 +578,13 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one" related-entity-name="mantle.work.effort.WorkEffort"/>
         <relationship type="one" title="SkillType" related-entity-name="moqui.basic.Enumeration">
             <key-map field-name="skillTypeEnumId"/></relationship>
+    </entity>
+
+    <entity entity-name="WikiPageWorkEffort" package-name="mantle.work.effort">
+        <field name="wikiPageId" type="id" is-pk="true"/>
+        <field name="workEffortId" type="id" is-pk="true"/>
+        <relationship type="one" related-entity-name="moqui.resource.wiki.WikiPage"/>
+        <relationship type="one" related-entity-name="mantle.work.effort.WorkEffort"/>
     </entity>
 
     <!-- ========================================================= -->
